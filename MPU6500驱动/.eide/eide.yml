@@ -1,8 +1,8 @@
 version: "4.1"
 name: Project
 type: ARM
-deviceName: null
-packDir: null
+deviceName: STM32F103C8
+packDir: .pack/Keil/STM32F1xx_DFP.2.3.0
 srcDirs: []
 virtualFolder:
   name: <virtual_root>
@@ -99,7 +99,9 @@ targets:
     cppPreprocessAttrs:
       defineList:
         - USE_STDPERIPH_DRIVER
+        - STM32F10X_MD
       incList:
+        - .
         - Start
         - Library
         - User
@@ -129,15 +131,12 @@ targets:
             warnings: all-warnings
           global:
             output-debug-info: enable
-            use-microLIB: false
           linker:
-            $disableOutputTask: true
             $outputTaskExcludes:
               - .bin
             output-format: elf
             ro-base: "0x08000000"
             rw-base: "0x20000000"
-            xo-base: ""
         scatterFilePath: ""
         storageLayout:
           RAM:
@@ -223,4 +222,9 @@ targets:
         otherCmds: ""
         proType: 1
         speed: 8000
-    uploader: JLink
+      OpenOCD:
+        baseAddr: "0x08000000"
+        bin: ""
+        interface: stlink
+        target: stm32f1x
+    uploader: OpenOCD
