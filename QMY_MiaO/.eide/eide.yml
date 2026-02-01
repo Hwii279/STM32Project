@@ -128,15 +128,12 @@ targets:
             warnings: all-warnings
           global:
             output-debug-info: enable
-            use-microLIB: false
           linker:
-            $disableOutputTask: true
             $outputTaskExcludes:
               - .bin
             output-format: elf
             ro-base: "0x08000000"
             rw-base: "0x20000000"
-            xo-base: ""
         scatterFilePath: ""
         storageLayout:
           RAM:

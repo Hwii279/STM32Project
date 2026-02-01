@@ -37,7 +37,16 @@
             "editor.insertSpaces": true,
             "editor.tabSize": 4,
             "editor.autoIndent": "advanced"
-        }
+        },
+        "MicroPython.syncButton": [
+            {
+                "text": "$(sync)",
+                "tooltip": "同步",
+                "alignment": "left",
+                "command": "extension.execute",
+                "priority": 4
+            }
+        ]
     },
     "extensions": {
         "recommendations": [
