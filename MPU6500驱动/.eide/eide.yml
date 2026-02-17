@@ -70,6 +70,8 @@ virtualFolder:
       files:
         - path: System/Delay.c
         - path: System/Delay.h
+        - path: System/SysTick.c
+        - path: System/SysTick.h
       folders: []
     - name: Hardware
       files:

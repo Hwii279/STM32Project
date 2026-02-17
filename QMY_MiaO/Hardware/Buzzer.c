@@ -1,5 +1,7 @@
 #include "Buzzer.h"
 
+uint16_t Timelast, Freq;
+
 void Buzzer_Init(void)
 {
     /* GPIO初始化 */
@@ -15,9 +17,9 @@ void Buzzer_Init(void)
     TIM_InternalClockConfig(BUZZER_TIM);
     // 初始化TIM时基单元
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-    TIM_TimeBaseStructure.TIM_Prescaler = 72 - 1;             // 1KHz计数频率=  72MHz/72 00 --> 10KHz
+    TIM_TimeBaseStructure.TIM_Prescaler = 72 - 1;               // 1KHz计数频率=  72MHz/72 00 --> 10KHz
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; // 向上计数模式
-    TIM_TimeBaseStructure.TIM_Period = 1000 - 1;                 // 50Hz PWM频率= 10KHz/200
+    TIM_TimeBaseStructure.TIM_Period = 1000 - 1;                // 50Hz PWM频率= 10KHz/200
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;     // 不分频
     TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;            // TIM3没有重复计数器
     TIM_TimeBaseInit(BUZZER_TIM, &TIM_TimeBaseStructure);
@@ -32,12 +34,12 @@ void Buzzer_Init(void)
     TIM_OC1Init(BUZZER_TIM, &TIM_OCInitStructure);                // 初始化TIM3通道1
 
     /* 外部中断初始化 */
-    NVIC_InitTypeDef NVIC_InitStructure;
+/*     NVIC_InitTypeDef NVIC_InitStructure;
     NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;           // TIM3中断
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;           // 使能中断通道
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2; // 抢占优先级2
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;        // 子优先级1
-    NVIC_Init(&NVIC_InitStructure);
+    NVIC_Init(&NVIC_InitStructure); */
 
     // 清除更新中断标志位并使能更新中断
     TIM_ClearFlag(BUZZER_TIM, TIM_FLAG_Update);
@@ -45,4 +47,33 @@ void Buzzer_Init(void)
 
     // 启动定时器
     TIM_Cmd(BUZZER_TIM, ENABLE);
+}
+
+void Buzzer_ON(void)
+{
+    TIM_Cmd(BUZZER_TIM, ENABLE);
+}
+
+void Buzzer_OFF(void)
+{
+    TIM_Cmd(BUZZER_TIM, DISABLE);
+}
+
+// 非阻塞式蜂鸣器控制函数，在SysTick中断中调用
+void Buzzer_Tick(void)
+{
+    if (Timelast > 0)
+    {
+        
+        Timelast--;
+    }
+    else
+    {
+        Buzzer_OFF();// 时间结束
+    }
+}
+
+void Buzzer_SetSound(uint16_t Freq, uint16_t ms)
+{
+    Timelast = ms;
 }
